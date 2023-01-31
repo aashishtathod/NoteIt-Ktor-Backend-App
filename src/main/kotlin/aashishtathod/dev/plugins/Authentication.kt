@@ -16,7 +16,7 @@ fun Application.configureAuthentication() {
         jwt {
             verifier(jwtController.verifier)
             validate {
-                val userId = it.payload.getClaim(JWTController.ClAIM).asString().toInt()
+                val userId = it.payload.getClaim(JWTController.ClAIM).asInt()
 
                 val user = userDao.findByUserId(userId)
 
