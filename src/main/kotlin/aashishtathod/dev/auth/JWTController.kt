@@ -12,22 +12,21 @@ class JWTController {
     val verifier: JWTVerifier = JWT
         .require(algorithm)
         .withIssuer(ISSUER)
-        .withAudience(AUDIENCE)
         .build()
 
     /**
      * Generates JWT token from [userId].
      */
-    fun sign(data: String): String = JWT
+    fun sign(userId: Int): String = JWT
         .create()
+        .withSubject("Authentication")
         .withIssuer(ISSUER)
-        .withAudience(AUDIENCE)
-        .withClaim(ClAIM, data)
+        .withClaim(ClAIM, userId)
         .sign(algorithm)
 
     companion object {
-        private const val ISSUER = "NotyKT-JWT-Issuer"
-        private const val AUDIENCE = "https://noty-api.herokuapp.com"
+        private const val ISSUER = "http://0.0.0.0:8080/"
+        private const val AUDIENCE = "http://0.0.0.0:8080/"
         const val ClAIM = "userId"
     }
 

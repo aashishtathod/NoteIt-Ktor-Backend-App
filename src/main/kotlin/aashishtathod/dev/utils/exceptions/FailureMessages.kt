@@ -1,4 +1,4 @@
-package aashishtathod.dev.utils
+package aashishtathod.dev.utils.exceptions
 
 object FailureMessages {
     const val MESSAGE_MISSING_CREDENTIALS = "Required 'username' or 'password' missing."

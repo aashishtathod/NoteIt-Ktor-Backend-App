@@ -23,14 +23,14 @@ class UserDaoImpl : UserDao {
         return rowToUser(statement?.resultedValues?.get(0))
     }
 
-    override suspend fun findByUsernameAndPassword(username: String,password: String): User? =
+    override suspend fun findByUsernameAndPassword(username: String, password: String): User? =
         DatabaseFactory.dbQuery {
             UsersTable.select { UsersTable.username.eq(username) and UsersTable.username.eq(username) }
                 .map { rowToUser(it) }
                 .singleOrNull()
         }
 
-    override suspend fun isUsernameAvailable(username: String): Boolean  {
+    override suspend fun isUsernameAvailable(username: String): Boolean {
         val user = DatabaseFactory.dbQuery {
             UsersTable.select { UsersTable.username.eq(username) }
                 .map { rowToUser(it) }
@@ -39,6 +39,11 @@ class UserDaoImpl : UserDao {
         return user == null
     }
 
+    override suspend fun findByUserId(userId: Int): User? = DatabaseFactory.dbQuery {
+        UsersTable.select { UsersTable.userId.eq(userId) }
+            .map { rowToUser(it) }
+            .singleOrNull()
+    }
 
     private fun rowToUser(row: ResultRow?): User? {
         return if (row == null) null

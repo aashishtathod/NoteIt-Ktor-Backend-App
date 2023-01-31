@@ -30,7 +30,7 @@ class AuthController(
                 request.name
             )!!
 
-            AuthResponse.Success(HttpStatusCode.Created.value, jwt.sign(user.userId.toString()))
+            AuthResponse.Success(HttpStatusCode.Created.value, jwt.sign(user.userId))
 
         } catch (e: Exception) {
             when (e) {
@@ -58,7 +58,7 @@ class AuthController(
                 encryptor.encrypt(request.password)
             ) ?: throw BadRequestException("Invalid credentials")
 
-            AuthResponse.Success(HttpStatusCode.OK.value, jwt.sign(user.userId.toString()))
+            AuthResponse.Success(HttpStatusCode.OK.value, jwt.sign(user.userId))
 
         } catch (e: Exception) {
             when (e) {

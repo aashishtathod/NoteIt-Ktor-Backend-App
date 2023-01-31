@@ -1,7 +1,7 @@
 package aashishtathod.dev.routes
 
 import aashishtathod.dev.controllers.AuthController
-import aashishtathod.dev.utils.FailureMessages
+import aashishtathod.dev.utils.exceptions.FailureMessages
 import aashishtathod.dev.utils.requests.LoginUserRequest
 import aashishtathod.dev.utils.requests.RegisterUserRequest
 import aashishtathod.dev.utils.responses.AuthResponse

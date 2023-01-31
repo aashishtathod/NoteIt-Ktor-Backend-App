@@ -1,15 +1,18 @@
 package aashishtathod.dev.utils.responses
 
 import io.ktor.http.*
+import kotlinx.serialization.Serializable
 
 sealed class NoteResponse {
-    data class Success<T>(
-        val statusCode: HttpStatusCode,
-        val data: T? = null
+    @Serializable
+    data class Success(
+        val statusCode: Int,
+        val noteId: Int
     ) : NoteResponse()
 
+    @Serializable
     data class Failure(
-        val statusCode: HttpStatusCode,
-        val message: String? = null
+        val statusCode: Int,
+        val message: String
     ) : NoteResponse()
 }
