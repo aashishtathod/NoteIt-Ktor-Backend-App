@@ -1,13 +1,15 @@
 package aashishtathod.dev.entity
 
+import kotlinx.serialization.Serializable
 import org.joda.time.DateTime
 
+@Serializable
 data class Note(
     val noteId: Int,
     val userId: Int,
     val title: String,
     val note: String,
-    val createdAt: DateTime,
+    val createdAt: Long,
     val isPinned: Boolean,
-    val updatedAt: DateTime
+    val updatedAt: Long
 )
