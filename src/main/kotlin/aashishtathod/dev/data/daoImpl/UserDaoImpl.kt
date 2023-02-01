@@ -11,7 +11,7 @@ import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.statements.InsertStatement
 
 class UserDaoImpl : UserDao {
-    override suspend fun registerUser(username: String, password: String, name: String): User? {
+    override suspend fun registerUser(username: String, password: String, name: String): User {
         var statement: InsertStatement<Number>? = null
         DatabaseFactory.dbQuery {
             statement = UsersTable.insert {
@@ -20,7 +20,7 @@ class UserDaoImpl : UserDao {
                 it[UsersTable.password] = password
             }
         }
-        return rowToUser(statement?.resultedValues?.get(0))
+        return rowToUser(statement?.resultedValues!![0])
     }
 
     override suspend fun findByUsernameAndPassword(username: String, password: String): User? =
@@ -45,9 +45,10 @@ class UserDaoImpl : UserDao {
             .singleOrNull()
     }
 
-    private fun rowToUser(row: ResultRow?): User? {
-        return if (row == null) null
-        else User(
+    private fun rowToUser(row: ResultRow): User {
+     //   return if (row == null) null
+     //   else
+        return  User(
             row[UsersTable.name],
             row[UsersTable.username],
             row[UsersTable.password],

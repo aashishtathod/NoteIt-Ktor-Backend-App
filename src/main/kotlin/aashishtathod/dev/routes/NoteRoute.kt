@@ -24,7 +24,7 @@ fun Route.NoteRoute(noteController: NoteController) {
                 ?: throw UnauthorizedActivityException(FailureMessages.MESSAGE_ACCESS_DENIED)
 
             val noteResponse = noteController.getNotesByUser(principal.user)
-            call.respond(HttpStatusCode.Created, noteResponse)
+            call.respond(HttpStatusCode.OK, noteResponse)
         }
 
         route("/note") {
@@ -37,7 +37,7 @@ fun Route.NoteRoute(noteController: NoteController) {
                     throw BadRequestException(FailureMessages.MESSAGE_MISSING_CREDENTIALS)
                 }
                 val noteResponse = noteController.addNote(principal.user, noteRequest)
-                call.respond(HttpStatusCode.Created, noteResponse)
+                call.respond(HttpStatusCode.OK, noteResponse)
             }
 
             put("/{id}") {

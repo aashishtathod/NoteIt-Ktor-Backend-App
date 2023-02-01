@@ -1,30 +1,29 @@
 package aashishtathod.dev.controllers
 
 import aashishtathod.dev.data.dao.NoteDao
-import aashishtathod.dev.data.dao.UserDao
 import aashishtathod.dev.entity.Note
 import aashishtathod.dev.entity.User
-import aashishtathod.dev.utils.exceptions.FailureMessages
 import aashishtathod.dev.utils.exceptions.NoteNotFoundException
 import aashishtathod.dev.utils.exceptions.UnauthorizedActivityException
 import aashishtathod.dev.utils.requests.NoteRequest
 import aashishtathod.dev.utils.requests.PinRequest
-import aashishtathod.dev.utils.responses.AuthResponse
 import aashishtathod.dev.utils.responses.NoteResponse
-import io.ktor.http.*
+import aashishtathod.dev.utils.responses.NotesResponse
 import io.ktor.server.plugins.*
 
 class NoteController(
     private val noteDao: NoteDao
 ) {
 
-    suspend fun getNotesByUser(user: User): NoteResponse {
+    suspend fun getNotesByUser(user: User): NotesResponse {
         return try {
             val notes = noteDao.getAllByUser(user.userId)
 
-            NoteResponse.Success(HttpStatusCode.Created.value ,notes.map { Note(it.noteId, it.userId,it.title, it.note, it.createdAt, it.isPinned,it.updatedAt) })
+            NotesResponse.success(
+                notes.map { Note(it.noteId, it.userId, it.title, it.note, it.createdAt, it.isPinned, it.updatedAt) }
+            )
         } catch (uae: UnauthorizedActivityException) {
-            NoteResponse.Failure(HttpStatusCode.Unauthorized.value ,uae.message)
+            NotesResponse.unauthorized(uae.message)
         }
     }
 
@@ -36,12 +35,14 @@ class NoteController(
             validateNoteOrThrowException(noteTitle, noteText)
 
             val noteId = noteDao.add(user.userId, noteTitle, noteText)
+            if (noteId == null) {
+                NoteResponse.failed("Error Occurred")
+            } else {
+                NoteResponse.success(noteId)
 
-            NoteResponse.Success(HttpStatusCode.Created.value)
-        } catch (e: Exception) {
-            NoteResponse.Failure(
-                HttpStatusCode.FailedDependency.value, e.localizedMessage
-            )
+            }
+        } catch (bre: BadRequestException) {
+            NoteResponse.failed(bre.message!!)
         }
     }
 
@@ -55,17 +56,17 @@ class NoteController(
             checkOwnerOrThrowException(user.userId, noteId)
 
             if (noteDao.update(noteId, noteTitle, noteText)) {
-                NoteResponse.Success(HttpStatusCode.OK.value)
+                NoteResponse.success()
             } else {
-                NoteResponse.Failure(HttpStatusCode.FailedDependency.value, "Error Occurred")
+                NoteResponse.failed("Error Occurred")
             }
 
-        } catch (e: UnauthorizedActivityException) {
-            NoteResponse.Failure(HttpStatusCode.Unauthorized.value, e.localizedMessage)
-        } catch (e: BadRequestException) {
-            NoteResponse.Failure(HttpStatusCode.BadRequest.value, e.localizedMessage)
-        } catch (e: NoteNotFoundException) {
-            NoteResponse.Failure(HttpStatusCode.NotFound.value, e.localizedMessage)
+        } catch (uae: UnauthorizedActivityException) {
+            NoteResponse.unauthorized(uae.message)
+        } catch (bre: BadRequestException) {
+            NoteResponse.failed(bre.message!!)
+        } catch (nfe: NoteNotFoundException) {
+            NoteResponse.notFound(nfe.message)
         }
     }
 
@@ -76,17 +77,17 @@ class NoteController(
             checkOwnerOrThrowException(user.userId, noteId)
 
             if (noteDao.deleteById(noteId)) {
-                NoteResponse.Success(HttpStatusCode.OK.value)
+                NoteResponse.success()
             } else {
-                NoteResponse.Failure(HttpStatusCode.FailedDependency.value, "Error Occurred")
+                NoteResponse.failed("Error Occurred")
             }
 
-        } catch (e: UnauthorizedActivityException) {
-            NoteResponse.Failure(HttpStatusCode.Unauthorized.value, e.localizedMessage)
-        } catch (e: BadRequestException) {
-            NoteResponse.Failure(HttpStatusCode.BadRequest.value, e.localizedMessage)
-        } catch (e: NoteNotFoundException) {
-            NoteResponse.Failure(HttpStatusCode.NotFound.value, e.localizedMessage)
+        } catch (uae: UnauthorizedActivityException) {
+            NoteResponse.unauthorized(uae.message)
+        } catch (bre: BadRequestException) {
+            NoteResponse.failed(bre.message!!)
+        } catch (nfe: NoteNotFoundException) {
+            NoteResponse.notFound(nfe.message)
         }
     }
 
@@ -97,16 +98,16 @@ class NoteController(
             checkOwnerOrThrowException(user.userId, noteId)
 
             if (noteDao.updateNotePinById(noteId, pinRequest.isPinned)) {
-                NoteResponse.Success(HttpStatusCode.OK.value)
+                NoteResponse.success()
             } else {
-                NoteResponse.Failure(HttpStatusCode.FailedDependency.value, "Error Occurred")
+                NoteResponse.failed("Error Occurred")
             }
-        } catch (e: UnauthorizedActivityException) {
-            NoteResponse.Failure(HttpStatusCode.Unauthorized.value, e.localizedMessage)
-        } catch (e: BadRequestException) {
-            NoteResponse.Failure(HttpStatusCode.BadRequest.value, e.localizedMessage)
-        } catch (e: NoteNotFoundException) {
-            NoteResponse.Failure(HttpStatusCode.NotFound.value, e.localizedMessage)
+        } catch (uae: UnauthorizedActivityException) {
+            NoteResponse.unauthorized(uae.message)
+        } catch (bre: BadRequestException) {
+            NoteResponse.failed(bre.message!!)
+        } catch (nfe: NoteNotFoundException) {
+            NoteResponse.notFound(nfe.message)
         }
     }
 

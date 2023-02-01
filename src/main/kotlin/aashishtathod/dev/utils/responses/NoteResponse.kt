@@ -1,19 +1,60 @@
 package aashishtathod.dev.utils.responses
 
 import aashishtathod.dev.entity.Note
-import io.ktor.http.*
 import kotlinx.serialization.Serializable
 
-sealed class NoteResponse {
-    @Serializable
-    data class Success(
-        val statusCode: Int,
-        val notes: List<Note> = emptyList()
-    ) : NoteResponse()
+@Serializable
+data class NotesResponse(
+    override val status: Int,
+    override val message: String,
+    val notes: List<Note> = emptyList()
 
-    @Serializable
-    data class Failure(
-        val statusCode: Int,
-        val message: String
-    ) : NoteResponse()
+) : BaseResponse {
+    companion object {
+        fun unauthorized(message: String) = NotesResponse(
+            State.UNAUTHORIZED.value,
+            message
+        )
+
+        fun success(notes: List<Note>) = NotesResponse(
+            State.SUCCESS.value,
+            "Task successful",
+            notes
+        )
+    }
+}
+
+@Serializable
+data class NoteResponse(
+    override val status: Int,
+    override val message: String,
+    val noteId: Int? = null
+) : BaseResponse {
+    companion object {
+        fun unauthorized(message: String) = NoteResponse(
+            State.UNAUTHORIZED.value,
+            message
+        )
+
+        fun failed(message: String) = NoteResponse(
+            State.FAILED.value,
+            message
+        )
+
+        fun notFound(message: String) = NoteResponse(
+            State.NOT_FOUND.value,
+            message
+        )
+
+        fun success(id: Int) = NoteResponse(
+            State.SUCCESS.value,
+            "Task successful",
+            id
+        )
+
+        fun success() = NoteResponse(
+            State.SUCCESS.value,
+            "Task successful",
+        )
+    }
 }

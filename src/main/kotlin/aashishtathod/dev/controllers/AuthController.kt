@@ -28,22 +28,12 @@ class AuthController(
                 request.username,
                 encryptor.encrypt(request.password),
                 request.name
-            )!!
+            )
 
-            AuthResponse.Success(HttpStatusCode.Created.value, jwt.sign(user.userId))
+            AuthResponse.success(jwt.sign(user.userId), "Registration successful")
 
-        } catch (e: Exception) {
-            when (e) {
-                is BadRequestException -> AuthResponse.Failure(
-                    HttpStatusCode.BadRequest.value,
-                    e.localizedMessage
-                )
-
-                else -> AuthResponse.Failure(
-                    HttpStatusCode.InternalServerError.value,
-                    e.localizedMessage
-                )
-            }
+        } catch (bre: BadRequestException) {
+            AuthResponse.failed(bre.message!!)
         }
 
     }
@@ -58,20 +48,10 @@ class AuthController(
                 encryptor.encrypt(request.password)
             ) ?: throw BadRequestException("Invalid credentials")
 
-            AuthResponse.Success(HttpStatusCode.OK.value, jwt.sign(user.userId))
+            AuthResponse.success(jwt.sign(user.userId), "Login successful")
 
-        } catch (e: Exception) {
-            when (e) {
-                is BadRequestException -> AuthResponse.Failure(
-                    HttpStatusCode.BadRequest.value,
-                    e.localizedMessage
-                )
-
-                else -> AuthResponse.Failure(
-                    HttpStatusCode.InternalServerError.value,
-                    e.localizedMessage
-                )
-            }
+        } catch (bre: BadRequestException) {
+            AuthResponse.failed(bre.message!!)
         }
     }
 

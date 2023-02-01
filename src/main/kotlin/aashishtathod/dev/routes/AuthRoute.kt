@@ -4,7 +4,6 @@ import aashishtathod.dev.controllers.AuthController
 import aashishtathod.dev.utils.exceptions.FailureMessages
 import aashishtathod.dev.utils.requests.LoginUserRequest
 import aashishtathod.dev.utils.requests.RegisterUserRequest
-import aashishtathod.dev.utils.responses.AuthResponse
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.plugins.*
@@ -20,17 +19,16 @@ fun Route.AuthRoute(authController: AuthController) {
             val registerRequest = runCatching { call.receive<RegisterUserRequest>() }.getOrElse {
                 throw BadRequestException(FailureMessages.MESSAGE_MISSING_CREDENTIALS)
             }
-            val registerResponse: AuthResponse = authController.register(registerRequest)
-            call.respond(HttpStatusCode.Created, registerResponse)
+            val registerResponse = authController.register(registerRequest)
+            call.respond(HttpStatusCode.OK, registerResponse)
         }
 
         post("/login") {
             val loginRequest = runCatching { call.receive<LoginUserRequest>() }.getOrElse {
                 throw BadRequestException(FailureMessages.MESSAGE_MISSING_CREDENTIALS)
             }
-
-            val loginResponse: AuthResponse = authController.login(loginRequest)
-            call.respond(HttpStatusCode.Created, loginResponse)
+            val loginResponse = authController.login(loginRequest)
+            call.respond(HttpStatusCode.OK, loginResponse)
         }
 
     }

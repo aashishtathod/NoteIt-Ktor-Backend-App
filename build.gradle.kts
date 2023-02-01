@@ -33,26 +33,36 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")
     implementation("org.jetbrains.exposed:exposed-jodatime:$exposedVersion")
 
-    // PostgreSQL
+    // PostgresSQL
     implementation("org.postgresql:postgresql:$postgresVersion")
 
+    // Hikari
     implementation("com.zaxxer:HikariCP:$hikariVersion")
 
+    // Ktor Server
     implementation("io.ktor:ktor-server-core-jvm:$ktor_version")
+    implementation("io.ktor:ktor-server-netty-jvm:$ktor_version")
 
-    // implementation("io.ktor:ktor-server-content-negotiation-jvm:$ktor_version")
-    // implementation("io.ktor:ktor-serialization-kotlinx-json-jvm:$ktor_version")
+
+    // Content Negotiation and Serialization
     implementation("io.ktor:ktor-server-content-negotiation:$ktor_version")
     implementation("io.ktor:ktor-serialization-kotlinx-json:$ktor_version")
 
+    // Auth and JWT
     implementation("io.ktor:ktor-server-auth:$ktor_version")
     implementation("io.ktor:ktor-server-auth-jwt:$ktor_version")
 
-    implementation("io.ktor:ktor-server-call-logging-jvm:$ktor_version")
-    implementation("io.ktor:ktor-server-netty-jvm:$ktor_version")
+    // Status Pages
+    implementation("io.ktor:ktor-server-status-pages:$ktor_version")
 
+    // CORS
+    implementation("io.ktor:ktor-server-cors:$ktor_version")
+
+    // Logging
+    implementation("io.ktor:ktor-server-call-logging-jvm:$ktor_version")
     implementation("ch.qos.logback:logback-classic:$logback_version")
 
+    // test
     testImplementation("io.ktor:ktor-server-tests-jvm:$ktor_version")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
 }
