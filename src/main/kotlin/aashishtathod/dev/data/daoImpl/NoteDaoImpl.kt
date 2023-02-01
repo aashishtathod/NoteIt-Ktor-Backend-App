@@ -10,6 +10,7 @@ import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.statements.InsertStatement
 import org.jetbrains.exposed.sql.statements.UpdateStatement
+import org.joda.time.DateTime
 
 class NoteDaoImpl : NoteDao {
     override suspend fun add(userId: Int, title: String, note: String): Int? {
@@ -34,7 +35,7 @@ class NoteDaoImpl : NoteDao {
     override suspend fun update(noteId: Int, title: String, note: String): Boolean =
         DatabaseFactory.dbQuery {
             NotesTable.update({ NotesTable.noteId.eq(noteId) }) {
-                it[NotesTable.noteId] = noteId
+                it[NotesTable.updatedAt] = DateTime.now()
                 it[NotesTable.title] = title
                 it[NotesTable.note] = note
             }
@@ -78,9 +79,9 @@ class NoteDaoImpl : NoteDao {
             userId = row[NotesTable.userId],
             title = row[NotesTable.title],
             note = row[NotesTable.note],
-            createdAt = row[NotesTable.createdAt].millis,
+            createdAt = row[NotesTable.createdAt].toLocalDateTime().toString(),
             isPinned = row[NotesTable.isPinned],
-            updatedAt = row[NotesTable.updatedAt].millis,
+            updatedAt = row[NotesTable.updatedAt].toLocalDateTime().toString(),
         )
     }
 

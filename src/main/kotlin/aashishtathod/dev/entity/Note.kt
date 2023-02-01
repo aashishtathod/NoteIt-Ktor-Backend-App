@@ -9,7 +9,7 @@ data class Note(
     val userId: Int,
     val title: String,
     val note: String,
-    val createdAt: Long,
+    val createdAt: String,
     val isPinned: Boolean,
-    val updatedAt: Long
+    val updatedAt: String
 )
