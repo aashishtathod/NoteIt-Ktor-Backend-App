@@ -1,1 +1,1 @@
-web: aashishtathod.dev.noteit-apis/build/install/aashishtathod.dev.noteit-apis/bin/aashishtathod.dev.noteit-apis
+web: application/build/install/application/bin/application
