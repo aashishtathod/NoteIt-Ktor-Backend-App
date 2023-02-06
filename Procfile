@@ -1,0 +1,1 @@
+web: aashishtathod.dev.noteit-apis/build/install/aashishtathod.dev.noteit-apis/bin/aashishtathod.dev.noteit-apis
