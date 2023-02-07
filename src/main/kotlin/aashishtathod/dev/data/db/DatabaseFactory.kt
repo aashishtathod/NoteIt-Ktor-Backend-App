@@ -24,8 +24,16 @@ object DatabaseFactory {
 
     private fun createDataSource(): HikariDataSource {
         val config = HikariConfig()
+
+        val database = System.getenv("PGDATABASE")
+        val user = System.getenv("PGUSER")
+        val password = System.getenv("PGPASSWORD")
+
         config.driverClassName = System.getenv("JDBC_DRIVER")
-        config.jdbcUrl = System.getenv("DATABASE_URL")
+
+        //  jdbc:postgresql:noteit?user=postgres&password=542@@shishT
+
+        config.jdbcUrl = "jdbc:postgresql:$database?user=$user&password=$password"
         config.maximumPoolSize = 3
         config.isAutoCommit = true
         config.transactionIsolation = "TRANSACTION_REPEATABLE_READ"
