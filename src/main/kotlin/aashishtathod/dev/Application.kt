@@ -1,15 +1,14 @@
 package aashishtathod.dev
 
-import aashishtathod.dev.data.db.DatabaseFactory
-import io.ktor.server.application.*
 import aashishtathod.dev.plugins.*
+import io.ktor.server.application.*
 
 fun main(args: Array<String>): Unit =
     io.ktor.server.netty.EngineMain.main(args)
 
 fun Application.module() {
 
-    DatabaseFactory.init()
+ //   DatabaseFactory.init()
 
     configureCORS()
     configureMonitoring()

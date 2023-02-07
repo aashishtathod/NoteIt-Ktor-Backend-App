@@ -73,4 +73,13 @@ tasks {
     create("stage").dependsOn("installDist")
 }
 
+tasks.withType<Jar> {
+    manifest {
+        attributes(
+            mapOf(
+                "Main-Class" to application.mainClass
+            )
+        )
+    }
+}
 
