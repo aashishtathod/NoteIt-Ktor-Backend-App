@@ -28,15 +28,20 @@ object DatabaseFactory {
         val dbHost = System.getenv("PGHOST")
         val dbPort = System.getenv("PGPORT")
         val dbName = System.getenv("PGDATABASE")
+        val dbPassword = System.getenv("PGPASSWORD")
+        val dbUsername = System.getenv("PGUSER")
+        val dbDriver = System.getenv("JDBC_DRIVER")
 
-        config.driverClassName = System.getenv("JDBC_DRIVER")
-        config.password = System.getenv("PGPASSWORD")
-        config.username = System.getenv("PGUSER")
-        config.jdbcUrl = "jdbc:postgresql://$dbHost:$dbPort/$dbName"
-        config.maximumPoolSize = 3
-        config.isAutoCommit = true
-        config.transactionIsolation = "TRANSACTION_REPEATABLE_READ"
-        config.validate()
+        config.apply {
+            password = dbPassword
+            username = dbUsername
+            jdbcUrl = "jdbc:postgresql://$dbHost:$dbPort/$dbName"
+            driverClassName = dbDriver
+            maximumPoolSize = 3
+            isAutoCommit = true
+            transactionIsolation = "TRANSACTION_REPEATABLE_READ"
+            validate()
+        }
         return HikariDataSource(config)
     }
 
