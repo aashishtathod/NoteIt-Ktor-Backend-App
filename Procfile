@@ -1,1 +1,1 @@
-web: application/build/install/application/bin/application
+web: java -jar build/libs/aashishtathod.dev.noteit-apis-all.jar

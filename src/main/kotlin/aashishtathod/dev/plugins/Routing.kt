@@ -8,9 +8,9 @@ import aashishtathod.dev.data.daoImpl.NoteDaoImpl
 import aashishtathod.dev.data.daoImpl.UserDaoImpl
 import aashishtathod.dev.routes.AuthRoute
 import aashishtathod.dev.routes.NoteRoute
-import io.ktor.server.routing.*
-import io.ktor.server.response.*
 import io.ktor.server.application.*
+import io.ktor.server.response.*
+import io.ktor.server.routing.*
 
 fun Application.configureRouting() {
     routing {
@@ -20,7 +20,7 @@ fun Application.configureRouting() {
         val authController = AuthController(userDao,jwtController,encryptor)
         AuthRoute(authController)
 
-        get("/") {
+        get("/hello") {
             call.respondText("Hello World!")
         }
 
