@@ -3,13 +3,10 @@ package aashishtathod.dev.data.daoImpl
 import aashishtathod.dev.data.dao.NoteDao
 import aashishtathod.dev.data.db.DatabaseFactory
 import aashishtathod.dev.data.db.tables.NotesTable
-import aashishtathod.dev.data.db.tables.UsersTable
 import aashishtathod.dev.entity.Note
-import aashishtathod.dev.entity.User
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.statements.InsertStatement
-import org.jetbrains.exposed.sql.statements.UpdateStatement
 import org.joda.time.DateTime
 
 class NoteDaoImpl : NoteDao {
@@ -31,6 +28,13 @@ class NoteDaoImpl : NoteDao {
             NotesTable.select { NotesTable.userId.eq(userId) }
                 .mapNotNull { rowToNote(it) }
         }
+
+
+    override suspend fun getById(noteId: Int): Note? =
+        DatabaseFactory.dbQuery {
+            NotesTable.select { NotesTable.noteId.eq(noteId) }.firstNotNullOfOrNull { rowToNote(it) }
+        }
+
 
     override suspend fun update(noteId: Int, title: String, note: String): Boolean =
         DatabaseFactory.dbQuery {

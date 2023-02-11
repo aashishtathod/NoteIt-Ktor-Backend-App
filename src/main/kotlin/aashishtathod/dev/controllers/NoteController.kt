@@ -27,6 +27,22 @@ class NoteController(
         }
     }
 
+    suspend fun getNoteById(noteId: Int): NoteResponse {
+        return try {
+            val note = noteDao.getById(noteId)
+
+            if (note == null) {
+                NoteResponse.failed("Error Occurred")
+            } else {
+                NoteResponse.success(note)
+            }
+
+        } catch (uae: UnauthorizedActivityException) {
+            NoteResponse.unauthorized(uae.message)
+        }
+    }
+
+
     suspend fun addNote(user: User, note: NoteRequest): NoteResponse {
         return try {
             val noteTitle = note.title.trim()
@@ -38,7 +54,7 @@ class NoteController(
             if (noteId == null) {
                 NoteResponse.failed("Error Occurred")
             } else {
-                NoteResponse.success(noteId)
+                NoteResponse.success()
 
             }
         } catch (bre: BadRequestException) {

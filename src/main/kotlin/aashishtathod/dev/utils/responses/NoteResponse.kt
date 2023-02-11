@@ -28,7 +28,8 @@ data class NotesResponse(
 data class NoteResponse(
     override val status: Int,
     override val message: String,
-    val noteId: Int? = null
+    val success: Boolean = false,
+    val note: Note? = null
 ) : BaseResponse {
     companion object {
         fun unauthorized(message: String) = NoteResponse(
@@ -46,15 +47,17 @@ data class NoteResponse(
             message
         )
 
-        fun success(id: Int) = NoteResponse(
+        fun success(note: Note) = NoteResponse(
             State.SUCCESS.value,
             "Task successful",
-            id
+            true,
+            note
         )
 
         fun success() = NoteResponse(
             State.SUCCESS.value,
             "Task successful",
+            true
         )
     }
 }

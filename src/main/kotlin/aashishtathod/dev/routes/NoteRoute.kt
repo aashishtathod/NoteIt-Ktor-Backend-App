@@ -6,8 +6,6 @@ import aashishtathod.dev.utils.exceptions.FailureMessages
 import aashishtathod.dev.utils.exceptions.UnauthorizedActivityException
 import aashishtathod.dev.utils.requests.NoteRequest
 import aashishtathod.dev.utils.requests.PinRequest
-import aashishtathod.dev.utils.requests.RegisterUserRequest
-import aashishtathod.dev.utils.responses.AuthResponse
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
@@ -28,6 +26,16 @@ fun Route.NoteRoute(noteController: NoteController) {
         }
 
         route("/note") {
+
+            get("/{id}") {
+                val noteId = call.parameters["id"] ?: return@get
+
+                val principal = call.principal<UserPrincipal>()
+                    ?: throw UnauthorizedActivityException(FailureMessages.MESSAGE_ACCESS_DENIED)
+
+                val noteResponse = noteController.getNoteById(noteId.toInt())
+                call.respond(HttpStatusCode.OK, noteResponse)
+            }
 
             post("/new") {
                 val principal = call.principal<UserPrincipal>()
@@ -61,7 +69,7 @@ fun Route.NoteRoute(noteController: NoteController) {
 
                 val noteResponse = noteController.deleteNote(principal.user, noteId.toInt())
 
-                call.respond(HttpStatusCode.OK ,noteResponse)
+                call.respond(HttpStatusCode.OK, noteResponse)
             }
 
             patch("/{id}/pin") {
